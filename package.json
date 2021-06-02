@@ -15,6 +15,6 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "./node_modules/.bin/nodemon my-app.js"
   },
-  "author": "",
+  "author": "https://github.com/AlonsoK28",
   "license": "MIT"
 }
