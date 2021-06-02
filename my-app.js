@@ -36,7 +36,12 @@ app.get('/', function(req, res) {
 app.get('/get-users', function (req, res) {
 
   const getAllUsers = "SELECT * FROM USERS";
-  connection.connect();
+
+  if (!connection._connectCalled) {
+    connection.connect();
+  }
+
+
   connection.query(getAllUsers, function (error, rows, fields) {
     if (error) {
       const data = internalError();
@@ -52,7 +57,6 @@ app.get('/get-users', function (req, res) {
     }
 
   });
-  connection.end();
 
  
 
@@ -104,7 +108,10 @@ app.put('/add-user', function (req, res) {
   const insertUser = "INSERT INTO USERS (id, name, active, mail, role) VALUES (?, ?, ?, ?, ?)";
   const values = [id, name, active, mail, role];
 
-  connection.connect();
+  if (!connection._connectCalled) {
+    connection.connect();
+  }
+
   connection.query(insertUser, values, function (error, rows, fields) {
     if (error) {
 
@@ -118,7 +125,6 @@ app.put('/add-user', function (req, res) {
     }
 
   });
-  connection.end();
 
   function internalError() {
     const data = {
