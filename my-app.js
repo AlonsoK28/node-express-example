@@ -201,6 +201,64 @@ app.delete('/delete-user/:id', function (req, res) {
 
 });
 
+
+
+app.post('/edit-user', function (req, res) {
+
+  const id = req.body.id;
+  const name = req.body.name;
+  const active = req.body.active;
+  const mail = req.body.mail;
+  const role = req.body.role;
+
+  const editUser = "UPDATE USERS SET NAME = (?) , ACTIVE = (?), MAIL = (?), ROLE = (?) WHERE ID = (?)";
+  const values = [name, active, mail, role, id];
+
+  if (!connection._connectCalled) {
+    connection.connect();
+  }
+
+  connection.query(editUser, values, function (error, rows, fields) {
+    if (error) {
+
+      const data = internalError();
+      res.send(data);
+
+    } else {
+
+      const data = editedDeleted();
+      res.send(data);
+      
+    }
+
+  });
+
+  function internalError() {
+    const data = {
+      ok: false,
+      code: 500,
+      message: 'Database error'
+    };
+
+    return data;
+  }
+
+  function editedDeleted() {
+
+    const data = {
+      ok: true,
+      code: 200,
+      message: 'User was edit in Database',
+    };
+
+    return data;
+  }
+
+});
+
+
+
+
 app.use(function(req, res, next) {
   
   const data = notFound();
