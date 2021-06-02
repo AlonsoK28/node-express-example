@@ -149,6 +149,58 @@ app.put('/add-user', function (req, res) {
 
 });
 
+
+
+
+app.delete('/delete-user/:id', function (req, res) {
+
+  const id = req.params.id;
+
+  const deleteUser = "DELETE FROM USERS WHERE ID = (?)";
+  const value = [id];
+
+  if (!connection._connectCalled) {
+    connection.connect();
+  }
+
+  connection.query(deleteUser, value, function (error, rows, fields) {
+    if (error) {
+
+      const data = internalError();
+      res.send(data);
+
+    } else {
+
+      const data = dataDeleted();
+      res.send(data);
+      
+    }
+
+  });
+
+  function internalError() {
+    const data = {
+      ok: false,
+      code: 500,
+      message: 'Database error'
+    };
+
+    return data;
+  }
+
+  function dataDeleted() {
+
+    const data = {
+      ok: true,
+      code: 200,
+      message: 'User was deleted from Database',
+    };
+
+    return data;
+  }
+
+});
+
 app.use(function(req, res, next) {
   
   const data = notFound();
