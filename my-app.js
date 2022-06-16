@@ -44,6 +44,7 @@ app.get('/get-users', function (req, res) {
 
   connection.query(getAllUsers, function (error, rows, fields) {
     if (error) {
+      console.log({error})
       const data = internalError();
       res.send(data);
     }else{
