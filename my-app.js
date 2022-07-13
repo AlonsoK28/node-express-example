@@ -5,11 +5,17 @@ const cors = require('cors');
 const app = express();
 const port = process.env.PORT || 3000;
 
+// MySQL config
+const mySqlHost = getSqlHost();
+const mySqlUser = process.env.MYSQLUSER || 'macos-bigsur';
+const mySqlPassword = process.env.MYSQLPASSWORD || 'zY3vgrFvbbtiIJ1T';
+const mySqlDatabase = process.env.MYSQLDATABASE || 'express-example';
+
 const connection = mysql.createConnection({
-  host: process.env.MYSQLHOST || 'localhost',
-  user: process.env.MYSQLUSER || 'macos-bigsur',
-  password: process.env.MYSQLPASSWORD || 'zY3vgrFvbbtiIJ1T',
-  database: process.env.MYSQLDATABASE || 'express-example'
+  host: mySqlHost,
+  user: mySqlUser,
+  password: mySqlPassword,
+  database: mySqlDatabase
 });
 
 
@@ -27,10 +33,6 @@ app.get('/', function(req, res) {
 
  res.send(data);
 });
-
-
-
-
 
 
 app.get('/get-users', function (req, res) {
@@ -280,3 +282,11 @@ app.use(function(req, res, next) {
 app.listen(port, () => {
     console.log(`Server ready at port ${port}`);
 });
+
+
+function getSqlHost(){
+  const railwaySqlHost = `${process.env.MYSQLHOST}:${process.env.MYSQLPORT}`;
+  const localhost = 'localhost';
+
+  return process.env.MYSQLHOST ? railwaySqlHost : localhost;
+}
