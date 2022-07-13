@@ -17,6 +17,9 @@ node-express-example
 
 # changelog
 
+## 1.0.2
+- 👷‍♂️ improvements for railway environment variables
+
 ## 1.0.1
 - 👷‍♂️ added `railway` environment variables
 
