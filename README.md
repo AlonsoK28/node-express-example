@@ -17,6 +17,9 @@ node-express-example
 
 # changelog
 
+## 1.0.4
+- 👷‍♂️ improvements for `railway` environment
+
 ## 1.0.3
 - 👷‍♂️ added `vercel` config 
 
