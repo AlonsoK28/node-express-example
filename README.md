@@ -14,3 +14,11 @@ node-express-example
 }
 ```
 3. run `npm run start` command
+
+# changelog
+
+## 1.0.1
+- 👷‍♂️ added `railway` environment variables
+
+## 1.0.0
+- 🍏 initial implementation
