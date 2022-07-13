@@ -1,23 +1,27 @@
 const express = require("express");
-const bodyParser = require('body-parser');
-const mysql = require('mysql');
 const cors = require('cors');
+const bodyParser = require('body-parser');
+const mysql = require('mysql2');
 const app = express();
+require("dotenv").config();
+
+// app config
 const port = process.env.PORT || 3000;
 
 // MySQL config
-const mySqlHost = getSqlHost();
-const mySqlUser = process.env.MYSQLUSER || 'macos-bigsur';
-const mySqlPassword = process.env.MYSQLPASSWORD || 'zY3vgrFvbbtiIJ1T';
-const mySqlDatabase = process.env.MYSQLDATABASE || 'express-example';
+const mySqlHost = process.env.MYSQLHOST;
+const mySqlUser = process.env.MYSQLUSER;
+const mySqlPassword = process.env.MYSQLPASSWORD;
+const mySqlDatabase = process.env.MYSQLDATABASE;
+const mySqlPort = process.env.MYSQLPORT;
 
 const connection = mysql.createConnection({
   host: mySqlHost,
   user: mySqlUser,
   password: mySqlPassword,
-  database: mySqlDatabase
+  database: mySqlDatabase,
+  port: mySqlPort
 });
-
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -37,7 +41,7 @@ app.get('/', function(req, res) {
 
 app.get('/get-users', function (req, res) {
 
-  const getAllUsers = "SELECT * FROM USERS";
+  const getAllUsers = "SELECT * FROM users";
 
   if (!connection._connectCalled) {
     connection.connect();
@@ -108,7 +112,7 @@ app.put('/add-user', function (req, res) {
   const mail = req.body.mail;
   const role = req.body.role;
 
-  const insertUser = "INSERT INTO USERS (id, name, active, mail, role) VALUES (?, ?, ?, ?, ?)";
+  const insertUser = "INSERT INTO users (id, name, active, mail, role) VALUES (?, ?, ?, ?, ?)";
   const values = [id, name, active, mail, role];
 
   if (!connection._connectCalled) {
@@ -159,7 +163,7 @@ app.delete('/delete-user/:id', function (req, res) {
 
   const id = req.params.id;
 
-  const deleteUser = "DELETE FROM USERS WHERE ID = (?)";
+  const deleteUser = "DELETE FROM users WHERE ID = (?)";
   const value = [id];
 
   if (!connection._connectCalled) {
@@ -214,7 +218,7 @@ app.post('/edit-user', function (req, res) {
   const mail = req.body.mail;
   const role = req.body.role;
 
-  const editUser = "UPDATE USERS SET NAME = (?) , ACTIVE = (?), MAIL = (?), ROLE = (?) WHERE ID = (?)";
+  const editUser = "UPDATE users SET NAME = (?) , ACTIVE = (?), MAIL = (?), ROLE = (?) WHERE ID = (?)";
   const values = [name, active, mail, role, id];
 
   if (!connection._connectCalled) {
@@ -282,11 +286,3 @@ app.use(function(req, res, next) {
 app.listen(port, () => {
     console.log(`Server ready at port ${port}`);
 });
-
-
-function getSqlHost(){
-  const railwaySqlHost = `${process.env.MYSQLHOST}:${process.env.MYSQLPORT}`;
-  const localhost = 'localhost';
-
-  return process.env.MYSQLHOST ? railwaySqlHost : localhost;
-}
